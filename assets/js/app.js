@@ -22,33 +22,44 @@
     });
   }
 
-  // Quantity buttons
-  document.querySelectorAll('.qty-control').forEach((ctl) => {
+  // Quantity buttons — use event delegation so it survives DOM mutations
+  // (and so the +/- buttons work even if the input is dynamically added).
+  // After updating the value, dispatch 'input' + 'change' so any auto-submit
+  // handlers (e.g. on cart row qty change) also fire.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-qty]');
+    if (!btn) return;
+    // Don't interfere with native browser behavior on number inputs
+    const ctl = btn.closest('.qty-control');
+    if (!ctl) return;
     const input = ctl.querySelector('input[type="number"]');
-    ctl.querySelectorAll('button[data-qty]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        if (!input) return;
-        const step = parseInt(btn.dataset.qty, 10) || 0;
-        const min = parseInt(input.min || '0', 10);
-        const max = parseInt(input.max || '999999', 10);
-        let val = parseInt(input.value || '0', 10) + step;
-        if (Number.isNaN(val)) val = min || 1;
-        val = Math.max(min || 0, Math.min(max, val));
-        input.value = String(val);
-      });
-    });
+    if (!input) return;
+    e.preventDefault();
+    const step = parseInt(btn.dataset.qty, 10) || 0;
+    if (!step) return;
+    const min = parseInt(input.min || '0', 10);
+    const max = parseInt(input.max || '999999', 10);
+    let val = (parseInt(input.value, 10) || 0) + step;
+    if (Number.isNaN(val)) val = min || 1;
+    val = Math.max(Number.isFinite(min) ? min : 0, Math.min(max, val));
+    input.value = String(val);
+    // Fire events so any listeners (cart auto-submit) react
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
   });
 
-  // Auto-submit qty forms on change (cart row)
+  // Auto-submit cart qty form on input/change (debounced)
   document.querySelectorAll('.cart-qty input[type="number"]').forEach((inp) => {
     let t;
-    inp.addEventListener('input', () => {
+    const submit = () => {
       clearTimeout(t);
       t = setTimeout(() => {
         const f = inp.closest('form');
         if (f && inp.value !== '') f.submit();
-      }, 700);
-    });
+      }, 600);
+    };
+    inp.addEventListener('input', submit);
+    inp.addEventListener('change', submit);
   });
 
   // Reveal on scroll for hero card stack

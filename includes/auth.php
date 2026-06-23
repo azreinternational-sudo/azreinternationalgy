@@ -99,3 +99,22 @@ function auth_require_admin(string $redirectTo = '/login'): void
         redirect($redirectTo);
     }
 }
+
+function auth_change_password(int $userId, string $current, string $new): array
+{
+    if (strlen($new) < 6) {
+        return ['ok' => false, 'msg' => 'New password must be at least 6 characters.'];
+    }
+    $stmt = db()->prepare('SELECT password_hash FROM users WHERE id = ?');
+    $stmt->execute([$userId]);
+    $row = $stmt->fetch();
+    if (!$row) {
+        return ['ok' => false, 'msg' => 'Account not found.'];
+    }
+    if (!password_verify($current, $row['password_hash'])) {
+        return ['ok' => false, 'msg' => 'Current password is incorrect.'];
+    }
+    $hash = password_hash($new, PASSWORD_BCRYPT);
+    db()->prepare('UPDATE users SET password_hash = ? WHERE id = ?')->execute([$hash, $userId]);
+    return ['ok' => true];
+}

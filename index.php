@@ -32,6 +32,7 @@ $routes = [
     '/register'               => ['page' => 'register', 'method' => ['GET','POST']],
     '/logout'                 => ['page' => 'logout', 'method' => ['GET','POST']],
     '/account'                => ['page' => 'account', 'method' => ['GET','POST']],
+    '/account/password'       => ['page' => 'account_password', 'method' => ['GET','POST']],
     '/about'                  => ['page' => 'about'],
     '/contact'                => ['page' => 'contact', 'method' => ['GET','POST']],
     '/admin'                  => ['page' => 'admin/dashboard'],

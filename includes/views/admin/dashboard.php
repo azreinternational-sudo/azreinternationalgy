@@ -15,10 +15,40 @@ $low_stock = db()->query('SELECT id, slug, name, stock FROM products WHERE activ
 $recent_orders = db()->query('SELECT id, status, total, created_at, customer_name FROM orders ORDER BY id DESC LIMIT 8')->fetchAll();
 ?>
 <section class="container section">
-  <header class="page-head">
-    <h1>Dashboard</h1>
-    <p class="muted">Welcome back, <?= e(auth_user()['name']) ?>.</p>
+  <header class="page-head page-head-row">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="muted">Welcome back, <?= e(auth_user()['name']) ?>.</p>
+    </div>
+    <div class="head-actions">
+      <a class="btn btn-primary" href="<?= e(url('/admin/product/new')) ?>">+ New product</a>
+      <a class="btn btn-ghost" href="<?= e(url('/admin/categories')) ?>">Categories</a>
+    </div>
   </header>
+
+  <div class="admin-cta-grid">
+    <a class="admin-cta" href="<?= e(url('/admin/product/new')) ?>">
+      <div class="admin-cta-icon">+</div>
+      <div>
+        <strong>Add a product</strong>
+        <p class="muted small">Create a new SKU, set price, stock, image, category.</p>
+      </div>
+    </a>
+    <a class="admin-cta" href="<?= e(url('/admin/categories')) ?>">
+      <div class="admin-cta-icon">☰</div>
+      <div>
+        <strong>Manage categories</strong>
+        <p class="muted small">Add, rename, or reorder product categories.</p>
+      </div>
+    </a>
+    <a class="admin-cta" href="<?= e(url('/admin/products')) ?>">
+      <div class="admin-cta-icon">≣</div>
+      <div>
+        <strong>Browse catalog</strong>
+        <p class="muted small">Edit prices, stock, images, visibility for all products.</p>
+      </div>
+    </a>
+  </div>
 
   <div class="stat-grid">
     <a class="stat-card" href="<?= e(url('/admin/products')) ?>">

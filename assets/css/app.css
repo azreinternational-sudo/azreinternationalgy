@@ -5,14 +5,15 @@
 
 :root {
   /* Color tokens */
-  --bg-0: #060b1a;
-  --bg-1: #0a1224;
-  --bg-2: #0f1a33;
-  --ink: #eef3ff;
-  --ink-2: #b9c3da;
-  --muted: #8b95b3;
-  --line: rgba(255,255,255,0.08);
-  --line-strong: rgba(255,255,255,0.16);
+  --bg-0: #1a2540;
+  --bg-1: #243152;
+  --bg-2: #2d3d5f;
+  --bg-3: #3a4a6f;
+  --ink: #f1f4ff;
+  --ink-2: #c5cee5;
+  --muted: #8e9bc0;
+  --line: rgba(255,255,255,0.10);
+  --line-strong: rgba(255,255,255,0.18);
 
   --navy-50: #e8efff;
   --navy-200: #a4b8ff;
@@ -68,9 +69,11 @@ body {
   font-size: 16px;
   line-height: 1.55;
   color: var(--ink);
-  background: radial-gradient(1200px 800px at 90% -10%, rgba(43,77,255,0.18), transparent 60%),
-              radial-gradient(900px 700px at -10% 110%, rgba(255,140,26,0.10), transparent 60%),
-              linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 60%, var(--bg-0) 100%);
+  background:
+    radial-gradient(1100px 700px at 85% -5%, rgba(43,77,255,0.28), transparent 60%),
+    radial-gradient(900px 600px at 10% 100%, rgba(255,140,26,0.18), transparent 60%),
+    radial-gradient(700px 500px at 50% 50%, rgba(120,90,180,0.10), transparent 70%),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 35%, var(--bg-2) 75%, var(--bg-0) 100%);
   background-attachment: fixed;
   background-color: var(--bg-0);
   min-height: 100vh;
@@ -179,17 +182,22 @@ small { color: var(--muted); }
 /* Header / nav ============================================= */
 .site-header {
   position: sticky; top: 0; z-index: 50;
-  background: linear-gradient(180deg, rgba(6,11,26,0.85), rgba(6,11,26,0.55));
+  background-color: rgba(15, 23, 42, 0.55);
+  background-image: url('../images/header-bg.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   border-bottom: 1px solid var(--line);
+  box-shadow: 0 6px 24px -10px rgba(0,0,0,0.5);
 }
 .nav-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 1.25rem;
-  height: 70px;
+  gap: 1rem;
+  height: 60px;
 }
 .brand {
   display: inline-flex; align-items: center; gap: .65rem;
@@ -632,7 +640,7 @@ small { color: var(--muted); }
 
 /* Forms / auth ============================================= */
 .auth-section {
-  min-height: calc(100vh - 70px - 200px);
+  min-height: calc(100vh - 60px - 200px);
   display: flex; align-items: center; justify-content: center;
   padding: 3rem 1.25rem;
 }
@@ -740,6 +748,38 @@ label.checkbox input { width: auto; margin: 0; }
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   margin-bottom: 2rem;
 }
+.admin-cta-grid {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 1.5rem;
+}
+.admin-cta {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--r-lg);
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  color: var(--ink);
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+.admin-cta:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,179,71,0.35);
+  background: var(--glass-3);
+  color: var(--ink);
+}
+.admin-cta strong { display: block; font-size: 1rem; }
+.admin-cta p { margin: 0; }
+.admin-cta-icon {
+  flex: 0 0 auto;
+  width: 44px; height: 44px;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, rgba(255,179,71,0.20), rgba(255,140,26,0.20));
+  color: var(--amber-300);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; font-weight: 800;
+  line-height: 1;
+}
 .stat-card {
   padding: 1.25rem;
   border-radius: var(--r-lg);
@@ -830,7 +870,7 @@ label.checkbox input { width: auto; margin: 0; }
   .nav-actions .nav-link, .nav-actions .nav-quiet { display: none; }
   .nav-burger { display: inline-flex; }
   .nav-actions.is-open {
-    position: absolute; top: 70px; right: 0; left: 0;
+    position: absolute; top: 60px; right: 0; left: 0;
     flex-direction: column; align-items: stretch;
     background: var(--bg-1); padding: 1rem;
     border-bottom: 1px solid var(--line);
