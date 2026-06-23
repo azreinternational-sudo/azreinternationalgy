@@ -42,9 +42,9 @@ if (file_exists($localCfg)) {
 
 if (!defined('AZRE_DB_HOST')) define('AZRE_DB_HOST', getenv('AZRE_DB_HOST') ?: '127.0.0.1');
 if (!defined('AZRE_DB_PORT')) define('AZRE_DB_PORT', getenv('AZRE_DB_PORT') ?: '3306');
-if (!defined('AZRE_DB_NAME')) define('AZRE_DB_NAME', getenv('AZRE_DB_NAME') ?: 'u737768883_azre');
-if (!defined('AZRE_DB_USER')) define('AZRE_DB_USER', getenv('AZRE_DB_USER') ?: 'u737768883_azre');
-if (!defined('AZRE_DB_PASS')) define('AZRE_DB_PASS', getenv('AZRE_DB_PASS') ?: 'AzreInt1!');
+if (!defined('AZRE_DB_NAME')) define('AZRE_DB_NAME', getenv('AZRE_DB_NAME') ?: 'azre_international');
+if (!defined('AZRE_DB_USER')) define('AZRE_DB_USER', getenv('AZRE_DB_USER') ?: 'root');
+if (!defined('AZRE_DB_PASS')) define('AZRE_DB_PASS', getenv('AZRE_DB_PASS') ?: 'root');
 if (!defined('AZRE_DB_CHARSET')) define('AZRE_DB_CHARSET', 'utf8mb4');
 
 // Session name
