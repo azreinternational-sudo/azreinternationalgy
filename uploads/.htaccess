@@ -1,0 +1,33 @@
+# Azre International — uploads/ hardening
+# Block any PHP / script execution inside the uploads directory.
+# Only static images should live here.
+
+<IfModule mod_authz_core.c>
+  <FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh|asp|aspx|jsp)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh|asp|aspx|jsp)$">
+    Order allow,deny
+    Deny from all
+  </FilesMatch>
+</IfModule>
+
+# Disable PHP engine explicitly (belt + suspenders)
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+  php_flag engine off
+</IfModule>
+
+# Disable script execution via SetHandler (no CGI, no PHP, no SSI)
+RemoveHandler .php .phtml .phar .cgi .pl .py .sh
+RemoveType .php .phtml .phar .cgi .pl .py .sh
+AddType text/plain .php .phtml .phar .cgi .pl .py .sh
+
+Options -ExecCGI -Indexes

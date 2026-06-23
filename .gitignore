@@ -6,8 +6,9 @@
 includes/config.local.php
 
 # Uploaded product images
-public/uploads/*
-!public/uploads/.gitkeep
+uploads/*
+!uploads/.gitkeep
+!uploads/.htaccess
 
 # OS / editor cruft
 .DS_Store

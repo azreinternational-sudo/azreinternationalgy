@@ -1,4 +1,5 @@
-# Azre International — Apache config (Hostinger-compatible, both 2.2 + 2.4)
+# Azre International — Apache config (Hostinger-compatible, Apache 2.2 + 2.4)
+# Web root: this directory. index.php is the front controller.
 
 RewriteEngine On
 
@@ -34,27 +35,16 @@ RewriteRule ^ index.php [QSA,L]
   AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
 
-# Deny access to hidden files / folders (Apache 2.4 syntax with 2.2 fallback)
+# Block direct web access to /includes/ and /database/ (server code, not for browsers)
 <IfModule mod_authz_core.c>
-  <FilesMatch "^\.">
+  RedirectMatch 403 ^/(includes|database)(/|$)
+  <FilesMatch "(^|/)(\.|config\.local\.php|README\.md)$">
     Require all denied
   </FilesMatch>
 </IfModule>
 <IfModule !mod_authz_core.c>
-  <FilesMatch "^\.">
-    Order allow,deny
-    Deny from all
-  </FilesMatch>
-</IfModule>
-
-# Deny PHP execution in uploads (belt-and-suspenders, also done via <Directory>)
-<IfModule mod_authz_core.c>
-  <FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh)$">
-    Require all denied
-  </FilesMatch>
-</IfModule>
-<IfModule !mod_authz_core.c>
-  <FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh)$">
+  RedirectMatch 403 ^/(includes|database)(/|$)
+  <FilesMatch "(^|/)(\.|config\.local\.php|README\.md)$">
     Order allow,deny
     Deny from all
   </FilesMatch>
