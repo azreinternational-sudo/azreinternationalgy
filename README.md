@@ -63,7 +63,7 @@ Admin login: `admin@azreinternationalgy.com` / `admin1234` (change immediately).
 
 1. In Hostinger hPanel, open **Databases → MySQL** and create a database (e.g. `azre_intl`).
 2. Open **phpMyAdmin** and import `database/schema.sql`.
-3. Upload the entire project to `public_html/` (or a subfolder).
+3. Connect this GitHub repo to your `public_html/` via **hPanel → GIT**. The web root is the repo root.
 4. SSH in or use File Manager and create `includes/config.local.php`:
    ```php
    <?php
@@ -73,9 +73,8 @@ Admin login: `admin@azreinternationalgy.com` / `admin1234` (change immediately).
    define('AZRE_DB_USER', 'your_user');
    define('AZRE_DB_PASS', 'your_pass');
    ```
-5. From a shell: `php database/seed.php` to populate the catalog.
-6. Point your domain (`www.azreinternationalgy.com`) at `public_html/`.
-7. Sign in to admin at `https://www.azreinternationalgy.com/admin` and **change the default password**.
+5. SSH in: `cd public_html && rm -rf public && git pull origin main && php database/seed.php`
+6. Sign in to admin at `https://www.azreinternationalgy.com/admin` and **change the default password**.
 
 ---
 

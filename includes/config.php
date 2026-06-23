@@ -30,7 +30,7 @@ if (getenv('AZRE_BASE_URL')) {
 }
 
 // Upload directory (product images) — writable by PHP.
-define('AZRE_UPLOAD_DIR', dirname(__DIR__) . '/public/uploads');
+define('AZRE_UPLOAD_DIR', dirname(__DIR__) . '/uploads');
 define('AZRE_UPLOAD_URL', '/uploads');
 
 // Database credentials
