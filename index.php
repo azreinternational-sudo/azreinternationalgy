@@ -1,113 +1,149 @@
 <?php
-// Azre International — diagnostic index.php (v2)
-// Bypasses bootstrap guard, loads full app, surfaces real error.
-
+/**
+ * Azre International — Front controller & router
+ */
 define('AZRE_BOOTSTRAP', true);
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+require dirname(__DIR__) . '/includes/config.php';
+require dirname(__DIR__) . '/includes/db.php';
+require dirname(__DIR__) . '/includes/helpers.php';
+require dirname(__DIR__) . '/includes/auth.php';
+require dirname(__DIR__) . '/includes/cart.php';
 
-header('Content-Type: text/plain; charset=utf-8');
+auth_start();
 
-echo "=== PHP diagnostic v2 ===\n";
-echo "PHP version:     " . PHP_VERSION . "\n";
-echo "Server:          " . ($_SERVER['SERVER_SOFTWARE'] ?? 'unknown') . "\n";
-echo "Document root:   " . ($_SERVER['DOCUMENT_ROOT'] ?? 'unknown') . "\n";
-echo "Time:            " . date('Y-m-d H:i:s') . "\n";
+// URL parse
+$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$uri = rtrim($uri, '/') ?: '/';
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-echo "\n=== .user.ini (active values) ===\n";
-foreach (['display_errors', 'log_errors', 'error_log', 'memory_limit', 'max_execution_time'] as $k) {
-    echo "$k = " . ini_get($k) . "\n";
+// Simple router
+$routes = [
+    // public
+    '/'                       => ['page' => 'home'],
+    '/shop'                   => ['page' => 'shop'],
+    '/category'               => ['page' => 'category'],
+    '/product'                => ['page' => 'product'],
+    '/search'                 => ['page' => 'search'],
+    '/cart'                   => ['page' => 'cart', 'method' => ['GET']],
+    '/cart/add'               => ['page' => 'cart_add', 'method' => ['POST']],
+    '/cart/update'            => ['page' => 'cart_update', 'method' => ['POST']],
+    '/cart/remove'            => ['page' => 'cart_remove', 'method' => ['POST']],
+    '/login'                  => ['page' => 'login', 'method' => ['GET','POST']],
+    '/register'               => ['page' => 'register', 'method' => ['GET','POST']],
+    '/logout'                 => ['page' => 'logout', 'method' => ['GET','POST']],
+    '/account'                => ['page' => 'account', 'method' => ['GET','POST']],
+    '/about'                  => ['page' => 'about'],
+    '/contact'                => ['page' => 'contact', 'method' => ['GET','POST']],
+    '/admin'                  => ['page' => 'admin/dashboard'],
+    '/admin/login'            => ['page' => 'admin/login', 'method' => ['GET','POST']],
+    '/admin/logout'           => ['page' => 'admin/logout'],
+    '/admin/products'         => ['page' => 'admin/products'],
+    '/admin/product/new'      => ['page' => 'admin/product_form', 'method' => ['GET','POST']],
+    '/admin/product/edit'     => ['page' => 'admin/product_form', 'method' => ['GET','POST']],
+    '/admin/product/delete'   => ['page' => 'admin/product_delete', 'method' => ['POST']],
+    '/admin/categories'       => ['page' => 'admin/categories', 'method' => ['GET','POST']],
+];
+
+// Match route: exact match first, then parameter match
+$matched = null;
+$params = [];
+foreach ($routes as $path => $route) {
+    if ($path === $uri) {
+        $matched = $route;
+        break;
+    }
 }
-
-echo "\n=== Load config.php ===\n";
-try {
-    require __DIR__ . '/includes/config.php';
-    echo "config.php: loaded OK\n";
-    echo "  DB host=" . AZRE_DB_HOST . " port=" . AZRE_DB_PORT . " name=" . AZRE_DB_NAME . " user=" . AZRE_DB_USER . "\n";
-} catch (Throwable $e) {
-    echo "config.php ERROR: " . $e->getMessage() . "\n";
-    echo "  at " . $e->getFile() . ":" . $e->getLine() . "\n";
-    exit(1);
-}
-
-echo "\n=== DB connection ===\n";
-try {
-    $pdo = new PDO(
-        sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s', AZRE_DB_HOST, AZRE_DB_PORT, AZRE_DB_NAME, AZRE_DB_CHARSET),
-        AZRE_DB_USER, AZRE_DB_PASS,
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-    );
-    $count = (int)$pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
-    echo "DB connect: OK, products row count: $count\n";
-} catch (Throwable $e) {
-    echo "DB ERROR: " . $e->getMessage() . "\n";
-    echo "  code: " . $e->getCode() . "\n";
-}
-
-echo "\n=== Load helpers + auth + cart ===\n";
-foreach (['helpers.php', 'auth.php', 'cart.php'] as $f) {
-    try {
-        require __DIR__ . '/includes/' . $f;
-        echo "$f: loaded OK\n";
-    } catch (Throwable $e) {
-        echo "$f ERROR: " . $e->getMessage() . "\n";
-        echo "  at " . $e->getFile() . ":" . $e->getLine() . "\n";
-        exit(1);
+// Pattern match for paths like /product/{slug}, /category/{slug}
+if (!$matched) {
+    foreach ($routes as $path => $route) {
+        $pattern = preg_replace('#\{[^}]+\}#', '([^/]+)', $path);
+        if ($pattern !== $path && preg_match('#^' . $pattern . '$#', $uri, $m)) {
+            $matched = $route;
+            array_shift($m);
+            $params = $m;
+            break;
+        }
     }
 }
 
-echo "\n=== auth_start + session ===\n";
-try {
-    auth_start();
-    echo "session started OK, id=" . session_id() . "\n";
-} catch (Throwable $e) {
-    echo "SESSION ERROR: " . $e->getMessage() . "\n";
-}
-
-echo "\n=== Quick query (mimic what home.php does) ===\n";
-try {
-    $stmt = $pdo->query('SELECT id, name, price FROM products WHERE active = 1 ORDER BY id DESC LIMIT 3');
-    $rows = $stmt->fetchAll();
-    foreach ($rows as $r) {
-        echo "  #" . $r['id'] . " " . $r['name'] . " — GY " . number_format((float)$r['price'], 2) . "\n";
+// Also support /product/{slug}, /category/{slug} (not declared explicitly)
+if (!$matched) {
+    if (preg_match('#^/product/([^/]+)$#', $uri, $m)) {
+        $matched = ['page' => 'product'];
+        $params = [$m[1]];
+    } elseif (preg_match('#^/category/([^/]+)$#', $uri, $m)) {
+        $matched = ['page' => 'category'];
+        $params = [$m[1]];
+    } elseif (preg_match('#^/admin/product/(\d+)/edit$#', $uri, $m)) {
+        $matched = ['page' => 'admin/product_form'];
+        $params = [$m[1]];
+    } elseif (preg_match('#^/admin/product/(\d+)/delete$#', $uri, $m)) {
+        $matched = ['page' => 'admin/product_delete'];
+        $params = [$m[1]];
     }
-    echo "home query: OK\n";
-} catch (Throwable $e) {
-    echo "home query ERROR: " . $e->getMessage() . "\n";
 }
 
-echo "\n=== settings() helper (called by helpers / views) ===\n";
+if (!$matched) {
+    http_response_code(404);
+    $page_title = 'Page not found';
+    require dirname(__DIR__) . '/includes/views/header.php';
+    echo '<section class="container narrow"><div class="card"><h1>404 — Not found</h1><p>The page you’re looking for doesn’t exist.</p><p><a class="btn btn-primary" href="' . e(url('/')) . '">Back to home</a></p></div></section>';
+    require dirname(__DIR__) . '/includes/views/footer.php';
+    exit;
+}
+
+// Method guard
+if (!empty($matched['method']) && !in_array($method, $matched['method'], true)) {
+    http_response_code(405);
+    exit('Method not allowed');
+}
+
+// Dispatch
+$page = $matched['page'];
+$page_file = dirname(__DIR__) . '/includes/views/' . $page . '.php';
+
+if (!file_exists($page_file)) {
+    http_response_code(500);
+    exit("Missing view: $page");
+}
+
+$page_title = $page_title ?? AZRE_NAME;
+$body_class = $body_class ?? '';
+
+// Page-level guards
+if (str_starts_with($page, 'admin/') && $page !== 'admin/login') {
+    auth_require_admin('/admin/login');
+}
+
+// Buffer page content
+ob_start();
 try {
-    $email = setting('store_email', '(not set)');
-    echo "store_email: $email\n";
+    (function () use ($page_file, $params) {
+        $__params = $params;
+        extract($GLOBALS, EXTR_SKIP);
+        // Common vars for views
+        $__page = function ($name, $vars = []) use ($__params) {
+            extract($vars, EXTR_SKIP);
+            $__view_file = dirname(__DIR__) . '/includes/views/' . $name . '.php';
+            if (file_exists($__view_file)) require $__view_file;
+        };
+        require $page_file;
+    })();
 } catch (Throwable $e) {
-    echo "settings() ERROR: " . $e->getMessage() . "\n";
-    echo "  at " . $e->getFile() . ":" . $e->getLine() . "\n";
+    while (ob_get_level() > 0) ob_end_clean();
+    http_response_code(500);
+    if (defined('AZRE_DEBUG') && AZRE_DEBUG) {
+        echo '<pre>' . htmlspecialchars($e->getMessage() . "\n\n" . $e->getTraceAsString()) . '</pre>';
+    } else {
+        echo 'Server error.';
+    }
+    exit;
 }
+$content = ob_get_clean();
 
-echo "\n=== categories_list() helper ===\n";
-try {
-    $cats = categories_list();
-    echo "categories count: " . count($cats) . "\n";
-} catch (Throwable $e) {
-    echo "categories_list ERROR: " . $e->getMessage() . "\n";
-    echo "  at " . $e->getFile() . ":" . $e->getLine() . "\n";
-}
-
-echo "\n=== Try rendering home view ===\n";
-try {
-    ob_start();
-    $page = 'home';
-    $page_file = __DIR__ . '/includes/views/home.php';
-    $page_title = 'Home';
-    require $page_file;
-    $content = ob_get_clean();
-    echo "home view rendered OK, " . strlen($content) . " bytes\n";
-} catch (Throwable $e) {
-    echo "home view ERROR: " . $e->getMessage() . "\n";
-    echo "  at " . $e->getFile() . ":" . $e->getLine() . "\n";
-    echo $e->getTraceAsString() . "\n";
-}
-
-echo "\n=== END ===\n";
+// Wrap with header/footer
+$cart_count = cart_count();
+$current_user = auth_user();
+require dirname(__DIR__) . '/includes/views/header.php';
+echo $content;
+require dirname(__DIR__) . '/includes/views/footer.php';

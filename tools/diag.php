@@ -22,7 +22,7 @@ foreach (['display_errors', 'log_errors', 'error_log', 'memory_limit', 'max_exec
 
 echo "\n=== Load config.php ===\n";
 try {
-    require __DIR__ . '/includes/config.php';
+    require __DIR__ . '/../includes/config.php';
     echo "config.php: loaded OK\n";
     echo "  DB host=" . AZRE_DB_HOST . " port=" . AZRE_DB_PORT . " name=" . AZRE_DB_NAME . " user=" . AZRE_DB_USER . "\n";
 } catch (Throwable $e) {
@@ -45,10 +45,10 @@ try {
     echo "  code: " . $e->getCode() . "\n";
 }
 
-echo "\n=== Load helpers + auth + cart ===\n";
-foreach (['helpers.php', 'auth.php', 'cart.php'] as $f) {
+echo "\n=== Load db + helpers + auth + cart ===\n";
+foreach (['db.php', 'helpers.php', 'auth.php', 'cart.php'] as $f) {
     try {
-        require __DIR__ . '/includes/' . $f;
+        require __DIR__ . '/../includes/' . $f;
         echo "$f: loaded OK\n";
     } catch (Throwable $e) {
         echo "$f ERROR: " . $e->getMessage() . "\n";
@@ -99,7 +99,7 @@ echo "\n=== Try rendering home view ===\n";
 try {
     ob_start();
     $page = 'home';
-    $page_file = __DIR__ . '/includes/views/home.php';
+    $page_file = __DIR__ . '/../includes/views/home.php';
     $page_title = 'Home';
     require $page_file;
     $content = ob_get_clean();
