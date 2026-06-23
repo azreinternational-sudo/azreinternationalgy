@@ -1,0 +1,47 @@
+# ============================================================
+# Azre International — .gitignore
+# ============================================================
+
+# Local credentials (NEVER commit)
+includes/config.local.php
+
+# Uploaded product images
+public/uploads/*
+!public/uploads/.gitkeep
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+/logs
+
+# Test artifacts
+/screenshots/
+/scratch/
+/test-output/
+
+# Node / build artifacts (not used yet, but future-proofing)
+node_modules/
+dist/
+build/
+*.min.js
+*.min.css
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# OS temp
+tmp/
+temp/
+
+# PHP-specific
+*.cache
+.phpunit.result.cache
