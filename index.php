@@ -3,11 +3,11 @@
  * Azre International — Front controller & router
  */
 define('AZRE_BOOTSTRAP', true);
-require dirname(__DIR__) . '/includes/config.php';
-require dirname(__DIR__) . '/includes/db.php';
-require dirname(__DIR__) . '/includes/helpers.php';
-require dirname(__DIR__) . '/includes/auth.php';
-require dirname(__DIR__) . '/includes/cart.php';
+require __DIR__ . '/includes/config.php';
+require __DIR__ . '/includes/db.php';
+require __DIR__ . '/includes/helpers.php';
+require __DIR__ . '/includes/auth.php';
+require __DIR__ . '/includes/cart.php';
 
 auth_start();
 
@@ -86,9 +86,9 @@ if (!$matched) {
 if (!$matched) {
     http_response_code(404);
     $page_title = 'Page not found';
-    require dirname(__DIR__) . '/includes/views/header.php';
+    require __DIR__ . '/includes/views/header.php';
     echo '<section class="container narrow"><div class="card"><h1>404 — Not found</h1><p>The page you’re looking for doesn’t exist.</p><p><a class="btn btn-primary" href="' . e(url('/')) . '">Back to home</a></p></div></section>';
-    require dirname(__DIR__) . '/includes/views/footer.php';
+    require __DIR__ . '/includes/views/footer.php';
     exit;
 }
 
@@ -100,7 +100,7 @@ if (!empty($matched['method']) && !in_array($method, $matched['method'], true)) 
 
 // Dispatch
 $page = $matched['page'];
-$page_file = dirname(__DIR__) . '/includes/views/' . $page . '.php';
+$page_file = __DIR__ . '/includes/views/' . $page . '.php';
 
 if (!file_exists($page_file)) {
     http_response_code(500);
@@ -124,7 +124,7 @@ try {
         // Common vars for views
         $__page = function ($name, $vars = []) use ($__params) {
             extract($vars, EXTR_SKIP);
-            $__view_file = dirname(__DIR__) . '/includes/views/' . $name . '.php';
+            $__view_file = __DIR__ . '/includes/views/' . $name . '.php';
             if (file_exists($__view_file)) require $__view_file;
         };
         require $page_file;
@@ -144,6 +144,6 @@ $content = ob_get_clean();
 // Wrap with header/footer
 $cart_count = cart_count();
 $current_user = auth_user();
-require dirname(__DIR__) . '/includes/views/header.php';
+require __DIR__ . '/includes/views/header.php';
 echo $content;
-require dirname(__DIR__) . '/includes/views/footer.php';
+require __DIR__ . '/includes/views/footer.php';
