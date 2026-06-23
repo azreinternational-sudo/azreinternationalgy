@@ -1,5 +1,4 @@
-# Azre International — Apache config (Hostinger-compatible, Apache 2.2 + 2.4)
-# Web root: this directory. index.php is the front controller.
+# Azre International — Apache config (Hostinger / LiteSpeed compatible)
 
 RewriteEngine On
 
@@ -10,6 +9,13 @@ Options -Indexes -MultiViews
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
+
+# Block direct web access to /includes/ and /database/ (server code, not for browsers)
+# Use mod_rewrite (universally loaded) instead of RedirectMatch (mod_alias),
+# which can 500 on some LiteSpeed configs.
+<IfModule mod_rewrite.c>
+  RewriteRule ^(includes|database)(/|$) - [F,L]
+</IfModule>
 
 # Security headers
 <IfModule mod_headers.c>
@@ -35,16 +41,14 @@ RewriteRule ^ index.php [QSA,L]
   AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
 
-# Block direct web access to /includes/ and /database/ (server code, not for browsers)
+# Block access to hidden files, .user.ini, and config.local.php
 <IfModule mod_authz_core.c>
-  RedirectMatch 403 ^/(includes|database)(/|$)
-  <FilesMatch "(^|/)(\.|config\.local\.php|README\.md)$">
+  <FilesMatch "(^\.|/\.(?!well-known)|config\.local\.php|README\.md)$">
     Require all denied
   </FilesMatch>
 </IfModule>
 <IfModule !mod_authz_core.c>
-  RedirectMatch 403 ^/(includes|database)(/|$)
-  <FilesMatch "(^|/)(\.|config\.local\.php|README\.md)$">
+  <FilesMatch "(^\.|/\.(?!well-known)|config\.local\.php|README\.md)$">
     Order allow,deny
     Deny from all
   </FilesMatch>
