@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label>Stock<input type="number" name="stock" min="0" value="<?= (int)$p['stock'] ?>"></label>
       <label class="span-2">Image
         <?php if ($p['image']): ?>
-          <img class="thumb" src="<?= e(product_image($p['image'], $p['name'])) ?>" alt="">
+          <img class="thumb" src="<?= e(product_image($p['image'] ?? null, $p)) ?>" alt="">
           <small class="muted">Upload a new image to replace.</small>
         <?php endif; ?>
         <input type="file" name="image" accept="image/*">

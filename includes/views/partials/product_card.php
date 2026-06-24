@@ -6,7 +6,7 @@ $p = $p ?? [];
 ?>
 <a class="prod-card" href="<?= e(url('/product/' . ($p['slug'] ?? ''))) ?>" data-pid="<?= (int)($p['id'] ?? 0) ?>">
   <div class="prod-img">
-    <img src="<?= e(product_image($p['image'] ?? null, $p['name'] ?? 'AZ')) ?>" alt="<?= e($p['name'] ?? '') ?>" loading="lazy">
+    <img src="<?= e(product_image($p['image'] ?? null, $p)) ?>" alt="<?= e($p['name'] ?? '') ?>" loading="lazy">
     <?php if (!empty($p['featured'])): ?><span class="prod-badge prod-badge-hot">Featured</span><?php endif; ?>
   </div>
   <div class="prod-body">

@@ -1,74 +1,148 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMid slice">
   <defs>
     <linearGradient id="hbase" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0f1a36"/>
+      <stop offset="0" stop-color="#0a1024"/>
       <stop offset="0.5" stop-color="#1a2540"/>
       <stop offset="1" stop-color="#0a1024"/>
     </linearGradient>
-    <radialGradient id="horb" cx="0.78" cy="0.35" r="0.55">
-      <stop offset="0" stop-color="rgba(255,140,26,0.55)"/>
+    <radialGradient id="hwar" cx="0.82" cy="0.35" r="0.5">
+      <stop offset="0" stop-color="rgba(255,140,26,0.35)"/>
       <stop offset="1" stop-color="rgba(255,140,26,0)"/>
     </radialGradient>
-    <radialGradient id="hblu" cx="0.18" cy="0.85" r="0.6">
-      <stop offset="0" stop-color="rgba(43,77,255,0.55)"/>
+    <radialGradient id="hblu" cx="0.12" cy="0.85" r="0.5">
+      <stop offset="0" stop-color="rgba(43,77,255,0.30)"/>
       <stop offset="1" stop-color="rgba(43,77,255,0)"/>
     </radialGradient>
-    <linearGradient id="hdiag" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="rgba(255,255,255,0)"/>
-      <stop offset="0.5" stop-color="rgba(255,255,255,0.05)"/>
-      <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+    <linearGradient id="bottle1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#c45400"/>
     </linearGradient>
-    <pattern id="hgrid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    <linearGradient id="bottle2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4b6cff"/>
+      <stop offset="1" stop-color="#1d3ad6"/>
+    </linearGradient>
+    <linearGradient id="bottle3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2d3d5f"/>
+      <stop offset="1" stop-color="#0a1024"/>
+    </linearGradient>
+    <linearGradient id="drum" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a4a6f"/>
+      <stop offset="0.4" stop-color="#1a2540"/>
+      <stop offset="1" stop-color="#0a1024"/>
+    </linearGradient>
+    <linearGradient id="oilSplash" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="rgba(255,140,26,0)"/>
+      <stop offset="0.5" stop-color="rgba(255,179,71,0.5)"/>
+      <stop offset="1" stop-color="rgba(255,140,26,0)"/>
+    </linearGradient>
+    <pattern id="hgrid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M 56 0 L 0 0 0 56" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
     </pattern>
   </defs>
 
-  <!-- Base -->
-  <rect width="1600" height="900" fill="url(#hbase)"/>
+  <!-- Base + grid + glows -->
+  <rect width="1600" height="600" fill="url(#hbase)"/>
+  <rect width="1600" height="600" fill="url(#hgrid)"/>
+  <rect width="1600" height="600" fill="url(#hwar)"/>
+  <rect width="1600" height="600" fill="url(#hblu)"/>
 
-  <!-- Subtle grid -->
-  <rect width="1600" height="900" fill="url(#hgrid)"/>
+  <!-- ============================================================ -->
+  <!-- Right side: three product silhouettes (oil bottle, jug, drum) -->
+  <!-- ============================================================ -->
+  <g transform="translate(1100 60)">
 
-  <!-- Big soft glows (warm + cool) -->
-  <rect width="1600" height="900" fill="url(#horb)"/>
-  <rect width="1600" height="900" fill="url(#hblu)"/>
+    <!-- 1. Quart bottle (amber, motor oil) -->
+    <g transform="translate(0 0)" opacity="0.85">
+      <!-- cap -->
+      <rect x="80" y="0" width="60" height="22" rx="3" fill="#1a0f00"/>
+      <!-- neck -->
+      <rect x="92" y="22" width="36" height="28" fill="#2a1a05"/>
+      <!-- body -->
+      <path d="M 70 50 Q 70 50 70 80 L 70 360 Q 70 380 90 380 L 130 380 Q 150 380 150 360 L 150 80 Q 150 50 150 50 Z" fill="url(#bottle1)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <!-- label band -->
+      <rect x="72" y="160" width="76" height="120" fill="rgba(0,0,0,0.25)"/>
+      <!-- label text -->
+      <text x="110" y="195" text-anchor="middle" fill="#1a0f00" font-family="Inter, sans-serif" font-size="14" font-weight="800" letter-spacing="0.5">EVEREST</text>
+      <text x="110" y="215" text-anchor="middle" fill="#1a0f00" font-family="Inter, sans-serif" font-size="11" font-weight="600">5W-30</text>
+      <text x="110" y="235" text-anchor="middle" fill="#1a0f00" font-family="Inter, sans-serif" font-size="9" font-weight="500">FULL SYNTHETIC</text>
+      <line x1="82" y1="250" x2="138" y2="250" stroke="rgba(26,15,0,0.4)" stroke-width="1"/>
+      <text x="110" y="268" text-anchor="middle" fill="#1a0f00" font-family="Inter, sans-serif" font-size="8" font-weight="500">1 QT</text>
+      <!-- highlight -->
+      <rect x="80" y="50" width="6" height="310" rx="3" fill="rgba(255,255,255,0.18)"/>
+    </g>
 
-  <!-- Stylized diagonal "motion" lines (truck/auto feel) -->
-  <g opacity="0.45">
-    <line x1="-200" y1="700" x2="1800" y2="100" stroke="rgba(255,179,71,0.18)" stroke-width="2"/>
-    <line x1="-200" y1="740" x2="1800" y2="140" stroke="rgba(255,179,71,0.12)" stroke-width="2"/>
-    <line x1="-200" y1="780" x2="1800" y2="180" stroke="rgba(255,179,71,0.08)" stroke-width="2"/>
-    <line x1="-200" y1="820" x2="1800" y2="220" stroke="rgba(255,179,71,0.05)" stroke-width="2"/>
-  </g>
+    <!-- 2. Jug (blue, coolant) -->
+    <g transform="translate(180 40)" opacity="0.85">
+      <!-- handle -->
+      <path d="M 110 30 Q 150 30 150 70 L 150 110" fill="none" stroke="rgba(43,77,255,0.5)" stroke-width="14" stroke-linecap="round"/>
+      <!-- cap -->
+      <rect x="80" y="0" width="60" height="22" rx="3" fill="#0a1024"/>
+      <rect x="92" y="22" width="36" height="22" fill="#0f1a36"/>
+      <!-- body -->
+      <path d="M 60 44 L 60 380 Q 60 400 80 400 L 140 400 Q 160 400 160 380 L 160 44 Z" fill="url(#bottle2)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <!-- label -->
+      <rect x="64" y="200" width="92" height="120" fill="rgba(0,0,0,0.25)"/>
+      <text x="110" y="235" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-size="13" font-weight="800">COOLANT</text>
+      <text x="110" y="252" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-size="9" font-weight="500">50/50</text>
+      <text x="110" y="267" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-size="8" font-weight="500">PREDILUTED</text>
+      <line x1="78" y1="280" x2="142" y2="280" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <text x="110" y="298" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-size="8" font-weight="500">1 GAL</text>
+      <!-- highlight -->
+      <rect x="68" y="50" width="6" height="340" rx="3" fill="rgba(255,255,255,0.18)"/>
+    </g>
 
-  <!-- Right-side abstract mechanical shapes (gear hint) -->
-  <g opacity="0.18" transform="translate(1180 200)">
-    <circle cx="0" cy="0" r="180" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-    <circle cx="0" cy="0" r="120" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-    <circle cx="0" cy="0" r="60" fill="none" stroke="rgba(255,179,71,0.6)" stroke-width="2"/>
-    <!-- gear teeth -->
-    <g stroke="rgba(255,255,255,0.4)" stroke-width="3" fill="none">
-      <line x1="0" y1="-200" x2="0" y2="-150"/>
-      <line x1="0" y1="150" x2="0" y2="200"/>
-      <line x1="-200" y1="0" x2="-150" y2="0"/>
-      <line x1="150" y1="0" x2="200" y2="0"/>
-      <line x1="-141" y1="-141" x2="-106" y2="-106"/>
-      <line x1="106" y1="106" x2="141" y2="141"/>
-      <line x1="-141" y1="141" x2="-106" y2="106"/>
-      <line x1="106" y1="-106" x2="141" y2="-141"/>
+    <!-- 3. 55 Gal drum (industrial) -->
+    <g transform="translate(380 60)" opacity="0.9">
+      <!-- top -->
+      <ellipse cx="80" cy="20" rx="80" ry="14" fill="#3a4a6f" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <!-- body -->
+      <path d="M 0 20 L 0 440 Q 0 460 80 460 Q 160 460 160 440 L 160 20" fill="url(#drum)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <!-- ribs -->
+      <line x1="0" y1="80" x2="160" y2="80" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+      <line x1="0" y1="240" x2="160" y2="240" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+      <line x1="0" y1="400" x2="160" y2="400" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+      <!-- label band -->
+      <rect x="0" y="160" width="160" height="60" fill="rgba(0,0,0,0.4)"/>
+      <text x="80" y="185" text-anchor="middle" fill="#ffd07a" font-family="Inter, sans-serif" font-size="14" font-weight="800">SHELL</text>
+      <text x="80" y="205" text-anchor="middle" fill="#ffd07a" font-family="Inter, sans-serif" font-size="10" font-weight="600">ROTELLA T4</text>
+      <text x="80" y="370" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="Inter, sans-serif" font-size="9" font-weight="500">55 GAL · 208L</text>
+      <!-- highlight -->
+      <ellipse cx="20" cy="20" rx="4" ry="6" fill="rgba(255,255,255,0.18)"/>
+      <rect x="10" y="40" width="6" height="400" rx="3" fill="rgba(255,255,255,0.10)"/>
     </g>
   </g>
 
-  <!-- Left-side stylized "wave / hose" curve (marine / fluid hint) -->
-  <g opacity="0.30" fill="none" stroke="rgba(43,77,255,0.5)" stroke-width="3">
-    <path d="M -50 480 C 200 380, 400 580, 650 460 S 1100 340, 1300 460"/>
-    <path d="M -50 540 C 200 440, 400 640, 650 520 S 1100 400, 1300 520" stroke-opacity="0.7"/>
-    <path d="M -50 600 C 200 500, 400 700, 650 580 S 1100 460, 1300 580" stroke-opacity="0.4"/>
+  <!-- ============================================================ -->
+  <!-- Left side: liquid splash / oil pour -->
+  <!-- ============================================================ -->
+  <g opacity="0.7" fill="none" stroke="url(#oilSplash)" stroke-width="2.5" stroke-linecap="round">
+    <path d="M -50 380 C 200 280, 380 460, 580 360 S 950 240, 1100 340"/>
+    <path d="M -50 420 C 200 320, 380 500, 580 400 S 950 280, 1100 380" stroke-opacity="0.6"/>
+    <path d="M -50 460 C 200 360, 380 540, 580 440 S 950 320, 1100 420" stroke-opacity="0.4"/>
+  </g>
+
+  <!-- Drip dots -->
+  <g fill="rgba(255,179,71,0.5)">
+    <circle cx="200" cy="500" r="3"/>
+    <circle cx="420" cy="510" r="2"/>
+    <circle cx="700" cy="490" r="3"/>
+    <circle cx="850" cy="520" r="2"/>
+  </g>
+
+  <!-- Gear hint bottom-left (very subtle) -->
+  <g transform="translate(120 480) scale(0.6)" opacity="0.18" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2">
+    <circle cx="0" cy="0" r="60"/>
+    <circle cx="0" cy="0" r="40"/>
+    <line x1="0" y1="-70" x2="0" y2="-50"/>
+    <line x1="0" y1="50" x2="0" y2="70"/>
+    <line x1="-70" y1="0" x2="-50" y2="0"/>
+    <line x1="50" y1="0" x2="70" y2="0"/>
+    <line x1="-49" y1="-49" x2="-36" y2="-36"/>
+    <line x1="36" y1="36" x2="49" y2="49"/>
+    <line x1="-49" y1="49" x2="-36" y2="36"/>
+    <line x1="36" y1="-36" x2="49" y2="-49"/>
   </g>
 
   <!-- Top amber accent line -->
   <line x1="0" y1="2" x2="1600" y2="2" stroke="rgba(255,179,71,0.4)" stroke-width="2"/>
-
-  <!-- Diagonal sweep overlay -->
-  <rect width="1600" height="900" fill="url(#hdiag)"/>
 </svg>

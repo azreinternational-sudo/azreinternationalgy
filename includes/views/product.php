@@ -31,7 +31,7 @@ $csrf = csrf_token();
   <div class="product-detail">
     <div class="pd-gallery">
       <div class="pd-image-wrap">
-        <img src="<?= e(product_image($p['image'], $p['name'])) ?>" alt="<?= e($p['name']) ?>">
+        <img src="<?= e(product_image($p['image'] ?? null, $p)) ?>" alt="<?= e($p['name']) ?>">
         <?php if (!empty($p['featured'])): ?><span class="prod-badge prod-badge-hot">Featured</span><?php endif; ?>
       </div>
     </div>

@@ -21,7 +21,7 @@ $csrf = csrf_token();
       <?php foreach ($items as $it): ?>
       <div class="cart-row" data-pid="<?= (int)$it['id'] ?>">
         <a class="cart-img" href="<?= e(url('/product/' . $it['slug'])) ?>">
-          <img src="<?= e(product_image($it['image'], $it['name'])) ?>" alt="<?= e($it['name']) ?>" loading="lazy">
+          <img src="<?= e(product_image($it['image'] ?? null, $it)) ?>" alt="<?= e($it['name']) ?>" loading="lazy">
         </a>
         <div class="cart-meta">
           <a class="cart-name" href="<?= e(url('/product/' . $it['slug'])) ?>"><?= e($it['name']) ?></a>

@@ -101,11 +101,19 @@ function csrf_check(): bool
     return hash_equals($_SESSION['_csrf'] ?? '', (string)$sent);
 }
 
-/** Image URL with placeholder fallback */
-function product_image(?string $img, ?string $alt = null): string
+/** Image URL with placeholder fallback.
+ *  If $img is a real uploaded file, return it.
+ *  Otherwise, defer to /product_image.php which generates a branded
+ *  SVG placeholder using the product's slug (so we can pull brand,
+ *  category, SKU from the DB and color the placeholder accordingly).
+ */
+function product_image(?string $img, ?array $product = null): string
 {
     if ($img && file_exists(AZRE_UPLOAD_DIR . '/' . basename($img))) {
         return asset(AZRE_UPLOAD_URL . '/' . basename($img));
+    }
+    if ($product && !empty($product['slug'])) {
+        return asset('/product_image.php?slug=' . urlencode((string)$product['slug']));
     }
     return asset('/assets/images/placeholder.svg');
 }

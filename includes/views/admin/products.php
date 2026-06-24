@@ -51,7 +51,7 @@ $rows = $stmt->fetchAll();
         <?php foreach ($rows as $r): ?>
         <tr>
           <td>
-            <img class="thumb" src="<?= e(product_image($r['image'] ?? null, $r['name'])) ?>" alt="">
+            <img class="thumb" src="<?= e(product_image($r['image'] ?? null, $r)) ?>" alt="">
           </td>
           <td><code><?= e($r['sku']) ?></code></td>
           <td>
