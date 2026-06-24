@@ -197,7 +197,7 @@ small { color: var(--muted); }
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1rem;
-  height: 60px;
+  height: 50px;
 }
 .brand {
   display: inline-flex; align-items: center; gap: .65rem;
@@ -640,7 +640,7 @@ small { color: var(--muted); }
 
 /* Forms / auth ============================================= */
 .auth-section {
-  min-height: calc(100vh - 60px - 200px);
+  min-height: calc(100vh - 50px - 200px);
   display: flex; align-items: center; justify-content: center;
   padding: 3rem 1.25rem;
 }
@@ -870,7 +870,7 @@ label.checkbox input { width: auto; margin: 0; }
   .nav-actions .nav-link, .nav-actions .nav-quiet { display: none; }
   .nav-burger { display: inline-flex; }
   .nav-actions.is-open {
-    position: absolute; top: 60px; right: 0; left: 0;
+    position: absolute; top: 50px; right: 0; left: 0;
     flex-direction: column; align-items: stretch;
     background: var(--bg-1); padding: 1rem;
     border-bottom: 1px solid var(--line);
