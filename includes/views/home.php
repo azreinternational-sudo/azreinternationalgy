@@ -22,6 +22,26 @@ $top_cats = db()->query('SELECT c.id, c.slug, c.name, COUNT(p.id) AS cnt FROM ca
         <li><span class="trust-num">21</span><span class="trust-label">Trusted brands</span></li>
       </ul>
     </div>
+    <div class="hero-card-stack" aria-hidden="true">
+      <div class="hero-card hero-card-a">
+        <span class="hc-tag">5W-30</span>
+        <strong>Everest Full Synthetic</strong>
+        <small>12/1 Quart Case</small>
+        <span class="hc-price"><?= e(money(48)) ?></span>
+      </div>
+      <div class="hero-card hero-card-b">
+        <span class="hc-tag">DEF</span>
+        <strong>Musket Premium DEF</strong>
+        <small>55 Gal Drum</small>
+        <span class="hc-price"><?= e(money(176)) ?></span>
+      </div>
+      <div class="hero-card hero-card-c">
+        <span class="hc-tag">ATF</span>
+        <strong>Everest Dexron VI</strong>
+        <small>55 Gal Drum</small>
+        <span class="hc-price"><?= e(money(843)) ?></span>
+      </div>
+    </div>
   </div>
 </section>
 
