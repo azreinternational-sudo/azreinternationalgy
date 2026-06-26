@@ -9,7 +9,6 @@ $top_cats = db()->query('SELECT c.id, c.slug, c.name, COUNT(p.id) AS cnt FROM ca
 <section class="hero">
   <div class="container hero-inner">
     <div class="hero-copy">
-      <span class="eyebrow">Guyana · since today</span>
       <h1>Auto parts &amp; lubricants<br>that keep you <span class="grad-text">moving</span>.</h1>
       <p class="lead">From quarts to drums — engine oils, transmission fluids, gear oils, coolants, DEF, and chemicals for trucks, autos, bus, marine and industrial fleets. Sourced from a vetted global supplier. In-stock and ready to ship across Guyana.</p>
       <div class="hero-cta">
