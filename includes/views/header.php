@@ -35,8 +35,8 @@ $_flashes = flash_pop();
         </svg>
       </span>
       <span class="brand-text">
-        <strong>Azre</strong> International
-        <small><?= e(AZRE_TAGLINE) ?></small>
+        <strong class="brand-name"><?= e(AZRE_NAME) ?></strong>
+        <small class="brand-tag"><?= e(AZRE_TAGLINE) ?></small>
       </span>
     </a>
     <form class="search" action="<?= e(url('/search')) ?>" method="get" role="search">

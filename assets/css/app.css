@@ -879,20 +879,40 @@ label.checkbox input { width: auto; margin: 0; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 720px) {
-  .nav-row { grid-template-columns: auto auto; gap: .75rem; }
-  .search { grid-column: 1 / -1; order: 3; max-width: none; }
-  .nav-actions .nav-link, .nav-actions .nav-quiet { display: none; }
+  /* Compact nav: brand + cart/burger on top row, search below */
+  .nav-row {
+    grid-template-columns: auto 1fr;
+    gap: .65rem;
+    height: 60px;
+    align-items: center;
+  }
+  /* Brand: icon + name only (no tagline) — tagline was pushing the nav to 200px+ tall */
+  .brand { min-width: 0; }
+  .brand-text { flex-direction: row; align-items: center; gap: 0; }
+  .brand-name { font-size: .98rem; white-space: nowrap; }
+  .brand-tag { display: none; }
+  /* Search moves below the brand+actions row */
+  .search { grid-column: 1 / -1; order: 3; max-width: none; margin-top: .25rem; }
+  /* Compact right actions: cart + burger only */
+  .nav-actions { gap: .5rem; justify-content: flex-end; }
+  .nav-actions .nav-link,
+  .nav-actions .nav-quiet,
+  .nav-actions .nav-user,
+  .nav-actions .nav-admin,
+  .nav-actions .btn { display: none; }
   .nav-burger { display: inline-flex; }
+  /* Drawer when burger is open */
   .nav-actions.is-open {
     position: absolute; top: 60px; right: 0; left: 0;
     flex-direction: column; align-items: stretch;
-    background: var(--bg-1); padding: 1rem;
+    background: rgba(6,11,26,0.96); padding: 1rem;
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(20px);
   }
   .nav-actions.is-open .nav-link,
   .nav-actions.is-open .nav-quiet,
-  .nav-actions.is-open .nav-admin { display: block; padding: .65rem .85rem; }
+  .nav-actions.is-open .nav-admin,
+  .nav-actions.is-open .btn { display: block; padding: .65rem .85rem; }
   .nav-actions.is-open .cart-btn { align-self: flex-start; }
   .cart-row { grid-template-columns: 64px 1fr; gap: .5rem; padding: .85rem; }
   .cart-img { width: 64px; height: 64px; }
