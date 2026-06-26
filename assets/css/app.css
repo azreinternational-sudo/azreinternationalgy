@@ -879,11 +879,15 @@ label.checkbox input { width: auto; margin: 0; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 720px) {
-  /* Compact nav: brand + cart/burger on top row, search below */
+  /* Compact nav: brand + cart/burger on top row, search below.
+     min-height (not fixed height) so the grid grows to fit the search
+     row — otherwise the search overflowed and visually overlapped
+     the hero text. */
   .nav-row {
     grid-template-columns: auto 1fr;
-    gap: .65rem;
-    height: 60px;
+    gap: .5rem .65rem;
+    min-height: 60px;
+    padding: .5rem 0;
     align-items: center;
   }
   /* Brand: icon + name only (no tagline) — tagline was pushing the nav to 200px+ tall */
@@ -891,8 +895,8 @@ label.checkbox input { width: auto; margin: 0; }
   .brand-text { flex-direction: row; align-items: center; gap: 0; }
   .brand-name { font-size: .98rem; white-space: nowrap; }
   .brand-tag { display: none; }
-  /* Search moves below the brand+actions row */
-  .search { grid-column: 1 / -1; order: 3; max-width: none; margin-top: .25rem; }
+  /* Search moves below the brand+actions row, full width, no margin (gap handles spacing) */
+  .search { grid-column: 1 / -1; order: 3; max-width: none; }
   /* Compact right actions: cart + burger only */
   .nav-actions { gap: .5rem; justify-content: flex-end; }
   .nav-actions .nav-link,
