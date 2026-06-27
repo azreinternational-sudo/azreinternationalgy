@@ -25,6 +25,7 @@ $orders = $orders->fetchAll();
         <ul class="side-links">
           <li><a href="<?= e(url('/cart')) ?>">My cart</a></li>
           <li><a href="<?= e(url('/shop')) ?>">Continue shopping</a></li>
+          <li><a href="<?= e(url('/account/orders')) ?>">My orders</a></li>
           <li><a href="<?= e(url('/account/password')) ?>">Change password</a></li>
           <li><a href="<?= e(url('/logout')) ?>">Sign out</a></li>
         </ul>

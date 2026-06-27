@@ -28,11 +28,16 @@ $routes = [
     '/cart/add'               => ['page' => 'cart_add', 'method' => ['POST']],
     '/cart/update'            => ['page' => 'cart_update', 'method' => ['POST']],
     '/cart/remove'            => ['page' => 'cart_remove', 'method' => ['POST']],
+    '/checkout'               => ['page' => 'checkout', 'method' => ['GET']],
+    '/checkout/place'         => ['page' => 'checkout_place', 'method' => ['POST']],
+    '/checkout/thanks/{id}'   => ['page' => 'checkout_thanks', 'method' => ['GET']],
     '/login'                  => ['page' => 'login', 'method' => ['GET','POST']],
     '/register'               => ['page' => 'register', 'method' => ['GET','POST']],
     '/logout'                 => ['page' => 'logout', 'method' => ['GET','POST']],
     '/account'                => ['page' => 'account', 'method' => ['GET','POST']],
     '/account/password'       => ['page' => 'account_password', 'method' => ['GET','POST']],
+    '/account/orders'         => ['page' => 'account_orders', 'method' => ['GET']],
+    '/account/order/{id}'     => ['page' => 'account_order_detail', 'method' => ['GET']],
     '/about'                  => ['page' => 'about'],
     '/contact'                => ['page' => 'contact', 'method' => ['GET','POST']],
     '/admin'                  => ['page' => 'admin/dashboard'],
@@ -43,6 +48,8 @@ $routes = [
     '/admin/product/edit'     => ['page' => 'admin/product_form', 'method' => ['GET','POST']],
     '/admin/product/delete'   => ['page' => 'admin/product_delete', 'method' => ['POST']],
     '/admin/categories'       => ['page' => 'admin/categories', 'method' => ['GET','POST']],
+    '/admin/orders'           => ['page' => 'admin/orders', 'method' => ['GET']],
+    '/admin/order/{id}'       => ['page' => 'admin/order_detail', 'method' => ['GET','POST']],
 ];
 
 // Match route: exact match first, then parameter match

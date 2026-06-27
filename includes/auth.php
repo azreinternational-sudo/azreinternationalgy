@@ -59,19 +59,22 @@ function auth_logout(): void
     session_destroy();
 }
 
-function auth_register(string $name, string $email, string $password): array
+function auth_register(string $name, string $email, string $password, string $phone = ''): array
 {
     $name = trim($name);
     $email = trim(strtolower($email));
+    $phone = trim($phone);
     if (strlen($name) < 2) return ['ok' => false, 'msg' => 'Please enter your full name.'];
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) return ['ok' => false, 'msg' => 'Please enter a valid email address.'];
+    if ($phone === '') return ['ok' => false, 'msg' => 'Please enter your phone number.'];
+    if (strlen($phone) < 6) return ['ok' => false, 'msg' => 'Please enter a valid phone number.'];
     if (strlen($password) < 6) return ['ok' => false, 'msg' => 'Password must be at least 6 characters.'];
     $stmt = db()->prepare('SELECT id FROM users WHERE email = ?');
     $stmt->execute([$email]);
     if ($stmt->fetch()) return ['ok' => false, 'msg' => 'An account with that email already exists.'];
     $hash = password_hash($password, PASSWORD_BCRYPT);
-    $ins = db()->prepare('INSERT INTO users (name, email, password_hash, role, created_at) VALUES (?, ?, ?, "customer", NOW())');
-    $ins->execute([$name, $email, $hash]);
+    $ins = db()->prepare('INSERT INTO users (name, email, phone, password_hash, role, created_at) VALUES (?, ?, ?, ?, "customer", NOW())');
+    $ins->execute([$name, $email, $phone, $hash]);
     $uid = (int)db()->lastInsertId();
     $_SESSION['uid'] = $uid;
     cart_merge_guest_to_user($uid);

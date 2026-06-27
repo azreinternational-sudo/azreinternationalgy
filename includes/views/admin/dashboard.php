@@ -48,6 +48,13 @@ $recent_orders = db()->query('SELECT id, status, total, created_at, customer_nam
         <p class="muted small">Edit prices, stock, images, visibility for all products.</p>
       </div>
     </a>
+    <a class="admin-cta" href="<?= e(url('/admin/orders')) ?>">
+      <div class="admin-cta-icon">⇆</div>
+      <div>
+        <strong>Orders</strong>
+        <p class="muted small">View, filter, and update customer orders. <?= (int)($stats['pending_orders']) ?> pending.</p>
+      </div>
+    </a>
   </div>
 
   <div class="stat-grid">

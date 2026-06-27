@@ -58,8 +58,9 @@ $csrf = csrf_token();
       <div class="sum-row"><span>Subtotal</span><strong><?= e(money($total)) ?></strong></div>
       <div class="sum-row"><span>Shipping</span><span class="muted">Calculated at checkout</span></div>
       <div class="sum-row sum-total"><span>Estimated total</span><strong><?= e(money($total)) ?></strong></div>
-      <p class="muted small">Checkout is coming soon. <a href="<?= e(url('/contact')) ?>">Contact us</a> for a quote or to place an order.</p>
-      <a class="btn btn-ghost btn-block" href="<?= e(url('/shop')) ?>">Continue shopping</a>
+      <a class="btn btn-primary btn-block btn-lg" href="<?= e(url('/checkout')) ?>">Proceed to checkout</a>
+      <a class="btn btn-ghost btn-block" href="<?= e(url('/shop')) ?>" style="margin-top:.5rem">Continue shopping</a>
+      <p class="muted small" style="margin-top:.75rem">No online payment — we'll confirm by phone and arrange bank transfer or cash on delivery.</p>
     </aside>
   </div>
   <?php endif; ?>
