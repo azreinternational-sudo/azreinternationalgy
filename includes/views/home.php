@@ -52,8 +52,13 @@ $top_cats = db()->query('SELECT c.id, c.slug, c.name, COUNT(p.id) AS cnt FROM ca
   <div class="cat-grid">
     <?php foreach ($top_cats as $c): ?>
       <a class="cat-tile" href="<?= e(url('/category/' . $c['slug'])) ?>">
-        <span class="cat-tile-name"><?= e($c['name']) ?></span>
-        <span class="cat-tile-cnt"><?= (int)$c['cnt'] ?> products</span>
+        <span class="cat-tile-img">
+          <img src="<?= e(category_image($c['slug'])) ?>" alt="" loading="lazy">
+        </span>
+        <span class="cat-tile-meta">
+          <span class="cat-tile-name"><?= e($c['name']) ?></span>
+          <span class="cat-tile-cnt"><?= (int)$c['cnt'] ?> products</span>
+        </span>
       </a>
     <?php endforeach; ?>
   </div>

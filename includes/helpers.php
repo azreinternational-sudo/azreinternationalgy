@@ -120,6 +120,21 @@ function product_image(?string $img, ?array $product = null): string
     return asset('/assets/images/product-demo.jpg');
 }
 
+/** Category tile image — gold-themed product photo per category slug.
+ *  Falls back to the shared product-demo.jpg if a category doesn't
+ *  have its own image yet. */
+function category_image(?string $slug): string
+{
+    if ($slug) {
+        $safe = preg_replace('/[^a-z0-9\-]/', '', strtolower($slug));
+        $path = __DIR__ . '/../assets/images/categories/' . $safe . '.jpg';
+        if (is_file($path)) {
+            return asset('/assets/images/categories/' . $safe . '.jpg');
+        }
+    }
+    return asset('/assets/images/product-demo.jpg');
+}
+
 /** Category list (cached) */
 function categories_list(): array
 {
