@@ -33,5 +33,35 @@ function db(): PDO
         }
         exit('Database temporarily unavailable. Please try again shortly.');
     }
+
+    // Idempotent schema migrations applied on first DB use per process.
+    // Safe to run repeatedly; each statement is a no-op once applied.
+    azre_apply_migrations($pdo);
+
     return $pdo;
+}
+
+/**
+ * Idempotent migrations — adds columns / indexes that older databases
+ * may be missing. Safe to run on every request; each step is a no-op
+ * once the schema is up to date.
+ */
+function azre_apply_migrations(PDO $pdo): void
+{
+    static $done = false;
+    if ($done) return;
+    $done = true;
+
+    // users.phone — needed by checkout/guest flows (added 2026-06-27)
+    try {
+        $has = $pdo->query("SHOW COLUMNS FROM users LIKE 'phone'")->fetch();
+        if (!$has) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN phone VARCHAR(40) NULL AFTER email");
+        }
+    } catch (Throwable $e) {
+        // Don't break the request — log silently in debug mode
+        if (defined('AZRE_DEBUG') && AZRE_DEBUG) {
+            error_log('azre migration users.phone failed: ' . $e->getMessage());
+        }
+    }
 }
