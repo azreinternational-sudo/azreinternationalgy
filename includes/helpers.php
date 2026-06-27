@@ -112,10 +112,12 @@ function product_image(?string $img, ?array $product = null): string
     if ($img && file_exists(AZRE_UPLOAD_DIR . '/' . basename($img))) {
         return asset(AZRE_UPLOAD_URL . '/' . basename($img));
     }
-    if ($product && !empty($product['slug'])) {
-        return asset('/product_image.php?slug=' . urlencode((string)$product['slug']));
-    }
-    return asset('/assets/images/placeholder.svg');
+    // DEMO MODE: shared product demo image for all products until
+    // per-product photography is sourced. To re-enable per-product
+    // SVG placeholders, replace this line with:
+    //   return asset('/product_image.php?slug=' . urlencode((string)$product['slug']));
+    // (or fall through to /assets/images/placeholder.svg as before).
+    return asset('/assets/images/product-demo.jpg');
 }
 
 /** Category list (cached) */
