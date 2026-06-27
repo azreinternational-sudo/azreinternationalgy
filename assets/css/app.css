@@ -61,7 +61,7 @@
 html, body { margin: 0; padding: 0; }
 html {
   scroll-behavior: smooth;
-  background: #1a0f00;
+  background: #070512;
   min-height: 100%;
 }
 body {
@@ -69,16 +69,22 @@ body {
   font-size: 16px;
   line-height: 1.55;
   color: var(--ink);
-  /* Dark gold -> black gradient. Keeps the warm gold character
-     of the hero gear image as the site-wide mood, but stays dark
-     enough for light text + dark glass cards to read cleanly. */
+  /* Sampled colors directly from assets/images/header-bg.png:
+       Oil / dark dominant : #070512 (most common pixel)
+       Bright gold gear    : #BC7739
+       Deep amber          : #9B6429
+       Highlight cream-gold: #E1D167
+     Layered as gold radials over an oil-dark linear so the gold
+     reads as a glow, not a flat color. Light text + dark glass
+     cards stay readable. */
   background:
-    radial-gradient(1000px 800px at 12% 8%,  rgba(255,179,71,0.42), transparent 55%),
-    radial-gradient(1200px 900px at 88% 92%, rgba(255,140,26,0.28), transparent 60%),
-    radial-gradient(700px 500px at 50% 50%, rgba(255,209,128,0.10), transparent 70%),
-    linear-gradient(180deg, #1a0f00 0%, #2a1f0d 50%, #0d0700 100%);
+    radial-gradient(1100px 850px at 14% 10%, rgba(188,119,57,0.62), transparent 55%),
+    radial-gradient(1200px 900px at 86% 88%, rgba(155,100,41,0.48), transparent 60%),
+    radial-gradient(700px 500px at 50% 50%, rgba(225,209,103,0.18), transparent 70%),
+    radial-gradient(600px 400px at 80% 20%, rgba(225,209,103,0.14), transparent 65%),
+    linear-gradient(180deg, #070512 0%, #0d0410 50%, #050308 100%);
   background-attachment: fixed;
-  background-color: #1a0f00;
+  background-color: #070512;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
