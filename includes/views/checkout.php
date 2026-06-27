@@ -1,7 +1,8 @@
 <?php
-/** Checkout page — requires login. Redirects to /register?next=/checkout if guest. */
+/** Checkout page — works for guests and logged-in users.
+ *  Logged-in users get name/email pre-filled (read-only), phone editable.
+ *  Guests fill in everything. */
 $page_title = 'Checkout';
-auth_require_login('/register?next=/checkout');
 
 $user = auth_user();
 $items = cart_items_with_products();
@@ -13,17 +14,15 @@ if (empty($items)) {
 
 $subtotal = 0.0;
 foreach ($items as $it) $subtotal += $it['subtotal'];
-$shipping = 0.0; // operator confirms shipping separately
+$shipping = 0.0;
 $total = $subtotal + $shipping;
 
-$error = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // (kept here for fallback; primary handler is /checkout/place)
-    $error = 'Use the form below to submit your order.';
-}
+// Pre-fill from user record if logged in
+$default_name  = $user ? (string)($user['name']  ?? '') : '';
+$default_email = $user ? (string)($user['email'] ?? '') : '';
+$default_phone = $user ? trim((string)($user['phone'] ?? '')) : '';
 
-// Pre-fill phone from user record if available
-$default_phone = trim((string)($user['phone'] ?? ''));
+$is_logged_in = (bool)$user;
 ?>
 <section class="container section">
   <header class="page-head">
@@ -31,7 +30,15 @@ $default_phone = trim((string)($user['phone'] ?? ''));
     <p class="muted">Review your order and submit — we'll call you to confirm delivery &amp; payment.</p>
   </header>
 
-  <?php if ($error): ?><div class="flash flash-error"><?= e($error) ?></div><?php endif; ?>
+  <?php if (!$is_logged_in): ?>
+    <div class="flash flash-info">
+      Checking out as guest.
+      <a href="<?= e(url('/login?next=/checkout')) ?>">Sign in</a>
+      or
+      <a href="<?= e(url('/register?next=/checkout')) ?>">create an account</a>
+      to save your details for next time.
+    </div>
+  <?php endif; ?>
 
   <div class="checkout-layout">
     <form class="checkout-form" method="post" action="<?= e(url('/checkout/place')) ?>" novalidate>
@@ -40,16 +47,29 @@ $default_phone = trim((string)($user['phone'] ?? ''));
       <fieldset class="form-block">
         <legend>Contact</legend>
         <div class="form-grid">
-          <label>Full name
-            <input type="text" value="<?= e($user['name']) ?>" disabled>
+          <label class="span-2">Full name
+            <input type="text" name="customer_name" required
+              value="<?= e(old('customer_name') ?: $default_name) ?>"
+              <?= $is_logged_in ? 'readonly' : '' ?>
+              autocomplete="name">
           </label>
           <label>Email
-            <input type="email" value="<?= e($user['email']) ?>" disabled>
+            <input type="email" name="customer_email" required
+              value="<?= e(old('customer_email') ?: $default_email) ?>"
+              <?= $is_logged_in ? 'readonly' : '' ?>
+              autocomplete="email">
           </label>
-          <label class="span-2">Phone number (we'll call this number to confirm)
-            <input type="tel" name="customer_phone" required value="<?= e(old('customer_phone') ?: $default_phone) ?>" autocomplete="tel" placeholder="+592-XXX-XXXX" pattern="[\d+\-\s\(\)]{6,}">
+          <label>Phone number
+            <input type="tel" name="customer_phone" required
+              value="<?= e(old('customer_phone') ?: $default_phone) ?>"
+              autocomplete="tel" placeholder="+592-XXX-XXXX" pattern="[\d+\-\s\(\)]{6,}">
           </label>
         </div>
+        <?php if ($is_logged_in): ?>
+          <small class="muted">Name &amp; email are from your account. <a href="<?= e(url('/account')) ?>">Edit profile</a></small>
+        <?php else: ?>
+          <small class="muted">We'll call this number to confirm your order &amp; delivery.</small>
+        <?php endif; ?>
       </fieldset>
 
       <fieldset class="form-block">

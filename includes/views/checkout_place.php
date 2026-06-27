@@ -1,6 +1,5 @@
 <?php
-/** Checkout submit handler — creates order, sends admin email, clears cart. */
-auth_require_login('/register?next=/checkout');
+/** Checkout submit handler — works for both guests and logged-in users. */
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('/checkout');
@@ -10,7 +9,7 @@ if (!csrf_check()) {
     redirect('/checkout');
 }
 
-$user = auth_user();
+$user = auth_user(); // null for guests
 $items = cart_items_with_products();
 
 if (empty($items)) {
@@ -18,16 +17,31 @@ if (empty($items)) {
     redirect('/cart');
 }
 
-// Validate inputs
+// Validate inputs (all required for guests; for logged-in users name/email come from their account)
+$name       = trim((string)($_POST['customer_name']  ?? ''));
+$email      = trim((string)($_POST['customer_email'] ?? ''));
 $phone      = trim((string)($_POST['customer_phone'] ?? ''));
 $address    = trim((string)($_POST['ship_address']    ?? ''));
 $city       = trim((string)($_POST['ship_city']       ?? ''));
 $region     = trim((string)($_POST['ship_region']     ?? ''));
 $notes      = trim((string)($_POST['notes']           ?? ''));
 
-// Fall back to phone from users record if blank on form
-if ($phone === '') $phone = trim((string)($user['phone'] ?? ''));
+// Logged-in users can still override phone but name/email come from account
+if ($user) {
+    if ($name === '')  $name  = (string)$user['name'];
+    if ($email === '') $email = (string)$user['email'];
+    if ($phone === '') $phone = trim((string)($user['phone'] ?? ''));
+}
 
+// Validate
+if (strlen($name) < 2) {
+    flash_set('error', 'Please enter your full name.');
+    redirect('/checkout');
+}
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    flash_set('error', 'Please enter a valid email address.');
+    redirect('/checkout');
+}
 if (strlen($phone) < 6) {
     flash_set('error', 'Please enter a valid phone number so we can confirm your order.');
     redirect('/checkout');
@@ -53,14 +67,14 @@ $pdo = db();
 try {
     $pdo->beginTransaction();
 
-    // Insert order
+    // Insert order (user_id NULL for guests)
     $ins = $pdo->prepare('INSERT INTO orders
         (user_id, status, subtotal, shipping, tax, total, customer_name, customer_email, customer_phone, ship_address, notes, created_at)
         VALUES (?, "pending", ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())');
     $ins->execute([
-        (int)$user['id'],
+        $user ? (int)$user['id'] : null,
         $subtotal, $shipping, $tax, $total,
-        $user['name'], $user['email'], $phone,
+        $name, $email, $phone,
         $ship_full, $notes
     ]);
     $order_id = (int)$pdo->lastInsertId();
@@ -90,9 +104,8 @@ try {
     $admin_to = 'azreinternational@gmail.com';
     $from_addr = 'sales@azreinternationalgy.com';
     $from_name = AZRE_NAME;
-    $subject = sprintf('New order AZ-%05d from %s', $order_id, $user['name']);
+    $subject = sprintf('New order AZ-%05d from %s', $order_id, $name);
 
-    // HTML body
     $rows_html = '';
     foreach ($items as $it) {
         $rows_html .= '<tr>'
@@ -102,18 +115,19 @@ try {
             . '<td style="padding:6px 8px;border-bottom:1px solid #eee;text-align:right">' . e(money((float)$it['subtotal'])) . '</td>'
             . '</tr>';
     }
+    $account_hint = $user ? ' (account holder)' : ' (guest checkout)';
     $html = '
     <div style="font-family:Inter,system-ui,Arial,sans-serif;max-width:680px;margin:0 auto;color:#222">
       <div style="background:linear-gradient(135deg,#ffb347,#f76b00);padding:18px 22px;color:#1a0f00;border-radius:8px 8px 0 0">
         <h2 style="margin:0;font-size:20px">New order received</h2>
-        <div style="font-size:13px;margin-top:4px">Order <strong>AZ-' . str_pad((string)$order_id, 5, '0', STR_PAD_LEFT) . '</strong> from <strong>' . e($user['name']) . '</strong></div>
+        <div style="font-size:13px;margin-top:4px">Order <strong>AZ-' . str_pad((string)$order_id, 5, '0', STR_PAD_LEFT) . '</strong> from <strong>' . e($name) . '</strong>' . $account_hint . '</div>
       </div>
       <div style="padding:18px 22px;border:1px solid #eee;border-top:0;border-radius:0 0 8px 8px">
         <h3 style="margin:0 0 10px;font-size:15px">Customer</h3>
         <table style="font-size:13px;border-collapse:collapse">
-          <tr><td style="padding:3px 8px 3px 0;color:#666">Name</td><td><strong>' . e($user['name']) . '</strong></td></tr>
+          <tr><td style="padding:3px 8px 3px 0;color:#666">Name</td><td><strong>' . e($name) . '</strong></td></tr>
           <tr><td style="padding:3px 8px 3px 0;color:#666">Phone</td><td><strong>' . e($phone) . '</strong></td></tr>
-          <tr><td style="padding:3px 8px 3px 0;color:#666">Email</td><td><a href="mailto:' . e($user['email']) . '">' . e($user['email']) . '</a></td></tr>
+          <tr><td style="padding:3px 8px 3px 0;color:#666">Email</td><td><a href="mailto:' . e($email) . '">' . e($email) . '</a></td></tr>
           <tr><td style="padding:3px 8px 3px 0;color:#666">Address</td><td>' . e($ship_full) . '</td></tr>
           ' . ($notes ? '<tr><td style="padding:3px 8px 3px 0;color:#666">Notes</td><td>' . nl2br(e($notes)) . '</td></tr>' : '') . '
         </table>
@@ -140,12 +154,11 @@ try {
       </div>
     </div>';
 
-    // Plain text fallback
     $txt_lines = [
-        "New order AZ-" . str_pad((string)$order_id, 5, '0', STR_PAD_LEFT) . " from " . $user['name'],
+        "New order AZ-" . str_pad((string)$order_id, 5, '0', STR_PAD_LEFT) . " from " . $name . $account_hint,
         "",
         "Phone:   $phone",
-        "Email:   {$user['email']}",
+        "Email:   $email",
         "Address: $ship_full",
         $notes ? "Notes:   $notes" : "",
         "",
@@ -164,7 +177,7 @@ try {
     $boundary = 'azre_' . md5((string)microtime(true));
     $headers = [];
     $headers[] = 'From: ' . sprintf('%s <%s>', $from_name, $from_addr);
-    $headers[] = 'Reply-To: ' . $user['name'] . ' <' . $user['email'] . '>';
+    $headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
     $headers[] = 'X-Mailer: PHP/' . phpversion();
     $headers[] = 'MIME-Version: 1.0';
     $headers[] = 'Content-Type: multipart/alternative; boundary="' . $boundary . '"';
@@ -184,5 +197,5 @@ try {
 // Clear cart
 cart_set([]);
 
-// Redirect to thanks page
+// Redirect to thanks page (no login required to view)
 redirect('/checkout/thanks/' . $order_id);
