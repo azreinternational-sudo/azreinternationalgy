@@ -91,6 +91,7 @@ HTML;
   <header class="page-head"><h1>Contact</h1></header>
   <div class="prose">
     <p>Sales: <strong><?= e($sales_email) ?></strong></p>
+    <p>Phone: <strong><a href="tel:<?= e(str_replace(' ', '', AZRE_PHONE)) ?>"><?= e(AZRE_PHONE) ?></a></strong> (WhatsApp &amp; calls)</p>
     <p>Need a quote, a fleet price, or a hard-to-find product? Send us a note and we'll reply within one business day.</p>
   </div>
 

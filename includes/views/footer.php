@@ -54,6 +54,7 @@
         <li><a href="<?= e(url('/contact')) ?>">Contact</a></li>
       </ul>
       <p class="muted small">Sales: <?= e(AZRE_EMAIL) ?></p>
+      <p class="muted small">Tel: <a href="tel:<?= e(str_replace(' ', '', AZRE_PHONE)) ?>"><?= e(AZRE_PHONE) ?></a></p>
     </div>
   </div>
   <div class="container foot-bar">

@@ -30,7 +30,8 @@ $page_title = 'Order AZ-' . str_pad((string)$order['id'], 5, '0', STR_PAD_LEFT);
 
   <p class="muted">
     We'll call you at <strong><?= e($order['customer_phone']) ?></strong> to confirm delivery &amp; payment.
-    Questions? <a href="mailto:<?= e(AZRE_EMAIL) ?>"><?= e(AZRE_EMAIL) ?></a> or <a href="<?= e(url('/contact')) ?>">contact us</a>.
+    Questions? Call <a href="tel:<?= e(str_replace(' ', '', AZRE_PHONE)) ?>"><?= e(AZRE_PHONE) ?></a>
+    or email <a href="mailto:<?= e(AZRE_EMAIL) ?>"><?= e(AZRE_EMAIL) ?></a>.
   </p>
 
   <div class="card flush" style="margin-top:1rem">
