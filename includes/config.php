@@ -16,7 +16,7 @@ define('AZRE_NAME', 'Azre International');
 define('AZRE_TAGLINE', 'Auto parts & lubricants for trucks, autos, bus, marine & industry');
 define('AZRE_DOMAIN', 'www.azreinternationalgy.com');
 define('AZRE_EMAIL', 'sales@azreinternationalgy.com');
-define('AZRE_PHONE', '+592-704-9830'); // Operator-set sales line
+define('AZRE_PHONE', '+1-592-704-9830'); // Operator-set sales line (Guyana, dialed via +1 gateway)
 define('AZRE_CURRENCY', 'GYD'); // Guyana Dollar (operator can change)
 define('AZRE_CURRENCY_SYMBOL', 'G$');
 
